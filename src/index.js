@@ -19,9 +19,9 @@ app.get("/findColleges", (req, res) => {
     minPackage,
     exam,
   } = req.query;
-  //   console.log(exam);
-  maxFees = maxFees && maxFees > 0 ? maxFees : 10000;
-  minPackage = minPackage && minPackage > 0 ? minPackage : 0;
+  maxFees = maxFees && Number(maxFees) > 0 ? maxFees : 10000;
+  minPackage = minPackage && Number(minPackage) > 0 ? minPackage : 0;
+//   console.log(Number(minPackage));
 
   connection
     .find({
@@ -36,7 +36,7 @@ app.get("/findColleges", (req, res) => {
     .then((result) => res.send(result))
     .catch((error) => res.send(error));
 });
-
+// http://localhost:8080/findColleges?exam=CAT&name=indian&city=tiruchirappalli&state=tamil&course=pgpm&maxFees=20&minPackage=35
 app.use(function (req, res) {
   res.sendStatus(404);
 });
