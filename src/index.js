@@ -11,7 +11,7 @@ const { connection } = require("./connector");
 
 app.get("/findColleges", (req, res) => {
   let {
-    collegeName,
+    name,
     state,
     city,
     course,
@@ -22,17 +22,17 @@ app.get("/findColleges", (req, res) => {
   maxFees = maxFees && Number(maxFees) > 0 ? maxFees : 10000;
   minPackage = minPackage && Number(minPackage) > 0 ? minPackage : 0;
 //   console.log(Number(minPackage));
-
+  let filterObj={};
+  name? filterObj["name"]= name : null;
+  state? filterObj["state"]= state : null;
+  filterObj["maxFees"]= { $lte: maxFees },
+  filterObj["minPackage"]= { $gte: minPackage },
+  city? filterObj["city"]= city : null;
+  exam? filterObj["exam"]= { $in: [new RegExp(exam, "i")] }: null;
+  course? filterObj["course"]= course : null;
+  // console.log(filterObj);
   connection
-    .find({
-      name: { $in: [new RegExp(collegeName, "i")] },
-      state: { $in: [new RegExp(state, "i")] },
-      city: { $in: [new RegExp(city, "i")] },
-      course: { $in: [new RegExp(course, "i")] },
-      exam: { $in: [new RegExp(exam, "i")] },
-      maxFees: { $lte: maxFees },
-      minPackage: { $gte: minPackage },
-    })
+    .find(filterObj)
     .then((result) => res.send(result))
     .catch((error) => res.send(error));
 });
